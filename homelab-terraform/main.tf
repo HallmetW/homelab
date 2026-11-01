@@ -15,6 +15,7 @@ resource "proxmox_virtual_environment_vm" "test_vm" {
   }
   cpu {
     cores = each.value.cores
+    type = each.value.type
   }
 
   memory {
@@ -46,8 +47,7 @@ resource "proxmox_virtual_environment_vm" "test_vm" {
     }
     user_account {
     username = "ansible"
-    keys     = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9fGEVQxSEgx9ZuXqW7Y03mFETrndXMKEwREZRoUhcF ansible-homelab"]
+    keys     = [var.ssh_public_key]
     
   }
   }
@@ -106,10 +106,29 @@ resource "cloudflare_dns_record" "portfolio_www_dns" {
   ttl     = 1
 }
 
+resource "cloudflare_dns_record" "n8n" {
+  zone_id = var.cloudflare_zone_id
+  name    = "n8n"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.portfolio_tunnel.id}.cfargotunnel.com"
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
+
+resource "cloudflare_dns_record" "fluxer_dns" {
+  zone_id = var.cloudflare_zone_id
+  name    = "chat"
+  content = "31.21.30.230"
+  type    = "A"
+  proxied = true
+  ttl     = 1
+}
+
 locals {
   tunnel_hostnames = [
     "h-w.cloud",
     "www.h-w.cloud",
+    "n8n.h-w.cloud",
   ]
 }
 

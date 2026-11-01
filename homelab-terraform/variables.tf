@@ -17,8 +17,14 @@ variable "vms"{
     cores     = number
     memory    = number
     disk_size = optional(number, 3) #Optional disk size variable with a default value of 3GB
+    type      = optional(string, "qemu64") #Optional type variable with a default value of "qemu64"
   }))
   description = "Map of VM configurations"
+}
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH public key for the ansible user"
 }
 
 variable "template_vm_id" {
