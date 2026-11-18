@@ -4,6 +4,12 @@ resource "proxmox_virtual_environment_vm" "test_vm" {
   name      = each.key
   node_name = each.value.node
 
+  lifecycle {
+      ignore_changes = [
+        initialization[0].user_account,
+      ]
+    }
+
   clone {
     vm_id = var.template_vm_id
     full  = true
@@ -47,7 +53,7 @@ resource "proxmox_virtual_environment_vm" "test_vm" {
     }
     user_account {
     username = "ansible"
-    keys     = [var.ssh_public_key]
+    keys = [trimspace(var.ssh_public_key)]
     
   }
   }
