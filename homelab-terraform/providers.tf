@@ -1,5 +1,5 @@
 # Documentation available on Terraform Registry for each individual provider
-
+# https://registry.terraform.io/
 terraform {
   required_providers {
     proxmox = {
